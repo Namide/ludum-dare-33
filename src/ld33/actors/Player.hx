@@ -17,13 +17,14 @@ class Player extends Actor
 	{
 		super(parent);
 		
-		type = ActorType.Player;
+		type = ActorType.player;
 		
 		var cubes = [	new Vector( 0.23, 0.1, 0., 0.5 ),
 						new Vector( 0.8, 0.6, 0.1, 0.4 ),
 						new Vector( 0.23, 0.1, 0., 0.1 ) ];		
 		
 		addCubes( new Vector(0.84, 0.56, 1.7), cubes );
+		
 		
 	}
 	

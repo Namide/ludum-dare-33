@@ -6,9 +6,9 @@ import ld33.factory.CubeFactory;
 import ld33.factory.MaterialFactory;
 
 enum ActorType {
-	Player;
-	AI;
-	Bullet;
+	player;
+	policeman;
+	bullet;
 }
 
 /**

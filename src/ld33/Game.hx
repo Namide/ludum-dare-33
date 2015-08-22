@@ -14,6 +14,7 @@ import ld33.managers.AnimationManager;
 import ld33.managers.BulletManager;
 import ld33.managers.InputManager;
 import ld33.managers.PhysicManager;
+import ld33.managers.WaveManager;
 
 class CustomRenderer extends h3d.scene.Renderer {
 
@@ -50,16 +51,19 @@ class Game extends App
 {
 
 	static inline var SSAO:Bool = false;
-	static inline var GROUND_HALF_SIZE:Int = 16;
+	public static inline var GROUND_HALF_SIZE:Int = 16;
 	
 	var time : Float = 0.;
 	var shadow : h3d.pass.ShadowMap;
 	
-	var input:InputManager;
-	var ai:AIManager;
-	var bullet:BulletManager;
-	var physic:PhysicManager;
-	var anim:AnimationManager;
+	var levelNum = 0;
+	
+	public var input:InputManager;
+	public var ai:AIManager;
+	public var bullet:BulletManager;
+	public var physic:PhysicManager;
+	public var anim:AnimationManager;
+	public var waves:WaveManager;
 	
 	var player:Player;
 	var ground:Mesh;
@@ -76,12 +80,18 @@ class Game extends App
 		}
 	}
 
+	public function start(level:Int)
+	{
+		waves = new WaveManager( this, level );
+	}
+	
 	override function init() {
 		
 		init3D();
 		initManagers();
 		initPlayer();
 		
+		start(0);
 	}
 	
 	function initManagers()
@@ -96,6 +106,7 @@ class Game extends App
 	function initPlayer() {
 
 		player = new Player(s3d);
+		player.setPos( -Game.GROUND_HALF_SIZE * .5, .0, player.size.z * 0.5 );
 		input.add( player );
 		physic.add( player );
 		anim.add( player );

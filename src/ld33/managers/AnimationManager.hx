@@ -1,4 +1,5 @@
 package ld33.managers;
+import h3d.Quat;
 import h3d.Vector;
 import hxd.Math;
 
@@ -8,7 +9,8 @@ import hxd.Math;
  */
 class AnimationManager extends Manager
 {
-
+	var t = 0.;
+	
 	public function new() 
 	{
 		super();
@@ -17,6 +19,8 @@ class AnimationManager extends Manager
 	
 	public override function update( dt:Float )
 	{
+		t += dt;
+		
 		var v = new Vector();
 		for ( actor in actors )
 		{
@@ -25,15 +29,13 @@ class AnimationManager extends Manager
 			
 			if ( !(v.x == 0 && v.y == 0) )
 			{
-				//v.normalize();
-				
-				//var r = Math.acos( v.x / (v.x * v.x + v.y * v.y) );
 				var r = Math.atan2( v.y, v.x ) - Math.PI * 0.5;
+				var quat = actor.getRotationQuat();
+				var quat2 = new Quat();
+				quat2.initRotate(.0, .0, r);
 				
-				//trace( r * 180 / Math.PI );
-				
-				
-				actor.setRotate( .0, .0, r );
+				quat.lerp(quat, quat2, 0.5 );
+				actor.setRotationQuat( quat );
 			}
 		}
 	}

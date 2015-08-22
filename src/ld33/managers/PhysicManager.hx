@@ -25,12 +25,10 @@ class PhysicManager extends Manager
 				actor.vel.z += gravity;
 				posZ += (actor.vel.z) * dt;
 				
-				if ( posZ < actor.size.z * .5 )
-				{
+				if ( posZ < actor.size.z * .5 ) {
 					actor.onGround = true;
 					posZ = actor.size.z * .5;
 				}
-				
 			}
 			
 			actor.setPos( actor.x + actor.vel.x * dt, actor.y + actor.vel.y * dt, posZ );

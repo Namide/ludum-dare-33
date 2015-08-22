@@ -22,13 +22,13 @@ class InputManager extends Manager
 		{
 			switch( actor.type )
 			{
-				case ActorType.Player :
+				case ActorType.player :
 					
 					player( cast actor );
 					
-				case ActorType.Bullet :
+				case ActorType.bullet :
 				
-				case ActorType.AI :
+				case ActorType.policeman :
 				
 			}
 		}
