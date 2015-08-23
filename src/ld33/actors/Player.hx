@@ -11,11 +11,11 @@ import ld33.actors.Actor.ActorType;
 class Player extends Actor
 {
 	
-	public var inputVel = new Vector(.1, .1, .125);
+	public var inputVel = new Vector(10., 10., 17.);
 
-	public function new(?parent:Object) 
+	public function new() 
 	{
-		super(parent);
+		super();
 		
 		type = ActorType.player;
 		
@@ -25,7 +25,8 @@ class Player extends Actor
 		
 		addCubes( new Vector(0.84, 0.56, 1.7), cubes );
 		
-		
+		Game.INST.physic.add( this );
+		Game.INST.anim.add( this );
 	}
 	
 }

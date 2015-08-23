@@ -51,7 +51,9 @@ class Game extends App
 {
 
 	static inline var SSAO:Bool = false;
+	
 	public static inline var GROUND_HALF_SIZE:Int = 16;
+	public static var INST:Game;
 	
 	var time : Float = 0.;
 	var shadow : h3d.pass.ShadowMap;
@@ -63,7 +65,7 @@ class Game extends App
 	public var bullet:BulletManager;
 	public var physic:PhysicManager;
 	public var anim:AnimationManager;
-	public var waves:WaveManager;
+	public var wave:WaveManager;
 	
 	var player:Player;
 	var ground:Mesh;
@@ -82,10 +84,12 @@ class Game extends App
 
 	public function start(level:Int)
 	{
-		waves = new WaveManager( this, level );
+		wave = new WaveManager( this, level );
 	}
 	
 	override function init() {
+		
+		Game.INST = this;
 		
 		init3D();
 		initManagers();
@@ -105,11 +109,9 @@ class Game extends App
 	
 	function initPlayer() {
 
-		player = new Player(s3d);
+		player = new Player();
 		player.setPos( -Game.GROUND_HALF_SIZE * .5, .0, player.size.z * 0.5 );
-		input.add( player );
-		physic.add( player );
-		anim.add( player );
+		
 	}
 	
 	function init3D() {
@@ -171,13 +173,17 @@ class Game extends App
 
 	override function update( dt : Float ) {
 		
-		time += dt * 0.001;
+		dt *= 0.01;
+		time += dt;
 		
 		input.update(dt);
 		ai.update(dt);
 		bullet.update(dt);
 		physic.update(dt);
 		anim.update(dt);
+		
+		if ( wave != null )
+			wave.update(dt);
 		
 		s3d.camera.pos.set( player.x + 4, player.y + 20., 8. );
 		s3d.camera.target.set( player.x + 4, player.y, 0. );

@@ -7,8 +7,9 @@ import ld33.factory.MaterialFactory;
 
 enum ActorType {
 	player;
-	policeman;
+	enemy;
 	bullet;
+	none;
 }
 
 /**
@@ -27,11 +28,15 @@ class Actor extends Object
 	public var life:Float;
 	public var type:ActorType;
 	
-	public function new(?parent:Object) 
+	public function new() 
 	{
-		super(parent);
+		super();
+		type = ActorType.none;
 		vel = new Vector();
 		lastVel = new Vector();
+		
+		Game.INST.input.add( this );
+		Game.INST.s3d.addChild( this );
 	}
 	
 	function addCubes( size:Vector, cubes:Array<Vector> /* bottom to top: r, g, b, perc */ )

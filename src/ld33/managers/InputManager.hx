@@ -2,6 +2,8 @@ package ld33.managers;
 import hxd.Key;
 import hxd.Math;
 import ld33.actors.Actor;
+import ld33.actors.Bullet;
+import ld33.actors.Enemy;
 import ld33.actors.Player;
 
 /**
@@ -28,10 +30,26 @@ class InputManager extends Manager
 					
 				case ActorType.bullet :
 				
-				case ActorType.policeman :
-				
+					bullet( cast actor, dt );
+					
+				case ActorType.enemy :
+					
+					enemy( cast actor, dt );
+					
+				case ActorType.none :
+					
 			}
 		}
+	}
+	
+	function bullet( bullet:Bullet, dt:Float )
+	{
+		bullet.update( bullet, dt );
+	}
+	
+	function enemy( enemy:Enemy, dt:Float )
+	{
+		enemy.update( dt );
 	}
 	
 	function player( player:Player)

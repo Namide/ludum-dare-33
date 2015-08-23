@@ -7,7 +7,7 @@ package ld33.managers;
 class PhysicManager extends Manager
 {
 
-	public var gravity = -0.01;
+	public var gravity = -1.;
 	
 	public function new() 
 	{
