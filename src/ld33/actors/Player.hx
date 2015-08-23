@@ -29,4 +29,10 @@ class Player extends Actor
 		Game.INST.anim.add( this );
 	}
 	
+	public override function kill()
+	{
+		super.kill();
+		Game.INST.physic.remove( this );
+		Game.INST.anim.remove( this );
+	}
 }

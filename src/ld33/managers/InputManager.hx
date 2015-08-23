@@ -44,7 +44,7 @@ class InputManager extends Manager
 	
 	function bullet( bullet:Bullet, dt:Float )
 	{
-		bullet.update( bullet, dt );
+		bullet.update( dt );
 	}
 	
 	function enemy( enemy:Enemy, dt:Float )

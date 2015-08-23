@@ -19,7 +19,7 @@ class PhysicManager extends Manager
 	{
 		for ( actor in actors )
 		{
-			var posZ = actor.z;
+			var posZ = actor.mesh.z;
 			if ( !actor.onGround ) {
 				
 				actor.vel.z += gravity;
@@ -31,7 +31,8 @@ class PhysicManager extends Manager
 				}
 			}
 			
-			actor.setPos( actor.x + actor.vel.x * dt, actor.y + actor.vel.y * dt, posZ );
+			actor.setPos( actor.x + actor.vel.x * dt, actor.y + actor.vel.y * dt, 0 );
+			actor.mesh.z = posZ;
 			actor.lastVel.load( actor.vel );
 		}
 	}

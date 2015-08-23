@@ -11,19 +11,37 @@ import ld33.managers.WaveManager;
 class Enemy extends Actor
 {
 	public var t:Float = WaveManager.TIME_INIT;
-	public var delay:Float = 1.5;
+	public var delay:Float = 5.;
 	public var lastShoot:Float;
 	
-	public function new() 
+	public var id:Int;
+	public var idMax:Int;
+	
+	public var updatePath:Enemy->Float->Void;
+	
+	public function new(path:Enemy->Float->Void) 
 	{
 		super();
-		lastShoot = -delay;
+		
+		lastShoot = 0.5 - delay;
 		type = ActorType.enemy;
+		updatePath = path;
+		
+		Game.INST.wave.add( this );
 	}
 	
-	public function update( dt:Float )
+	public override function kill()
+	{
+		super.kill();
+		
+		Game.INST.wave.remove( this );
+	}
+	
+	public override function update( dt:Float )
 	{
 		t += dt;
+		updatePath( this, t );
+		
 		if ( t > lastShoot + delay ) {
 			
 			lastShoot += delay;

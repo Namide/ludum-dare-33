@@ -52,7 +52,7 @@ class Game extends App
 
 	static inline var SSAO:Bool = false;
 	
-	public static inline var GROUND_HALF_SIZE:Int = 16;
+	public static inline var GROUND_HALF_SIZE:Int = 6;
 	public static var INST:Game;
 	
 	var time : Float = 0.;
@@ -110,7 +110,7 @@ class Game extends App
 	function initPlayer() {
 
 		player = new Player();
-		player.setPos( -Game.GROUND_HALF_SIZE * .5, .0, player.size.z * 0.5 );
+		player.setPos( -Game.GROUND_HALF_SIZE * .5, .0, 0 );
 		
 	}
 	
