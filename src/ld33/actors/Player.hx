@@ -2,7 +2,9 @@ package ld33.actors;
 
 import h3d.scene.Object;
 import h3d.Vector;
+import hxd.Res;
 import ld33.actors.Actor.ActorType;
+import ld33.managers.SoundManager;
 import motion.Actuate;
 
 /**
@@ -65,10 +67,11 @@ class Player extends Actor
 				if ( bounds.collide(actor.mesh.getBounds() ) )
 				{
 					actor.onHurt( getPos() );
-					
 				}
 			}
 		}
+		
+		SoundManager.getInst().impact.play();
 		
 		Game.INST.s3d.camera.target.z = -.3;
 		Actuate.tween( Game.INST.s3d.camera.target, 0.5, { z:0 } ).ease( motion.easing.Elastic.easeOut );

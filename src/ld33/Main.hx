@@ -31,6 +31,12 @@ class Main
 	function new()
 	{
 		game = new Game();
+		game.onFinish = screenStart;
+	}
+	
+	function screenStart()
+	{
+		trace("screen start");
 	}
 	
 }

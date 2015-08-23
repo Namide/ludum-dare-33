@@ -41,20 +41,27 @@ class WaveManager extends Manager
 	{
 		var level = Levels.getLevel( levelId );
 		
-		actors = [];
-		var l = level.length;
-		for ( i in 0...l ) {
-			level[i]( i, l );
+		if ( level != null )
+		{
+			actors = [];
+			var l = level.length;
+			for ( i in 0...l ) {
+				level[i]( i, l );
+			}
+			
+			id = levelId;
 		}
 		
-		id = levelId;
+		
 	}
 	
 	
 	public override function update( dt:Float )
 	{
 		if ( actors.length < 1)
+		{
 			start( id + 1 );
+		}
 		/*t += dt;
 		t %= level.time;
 		

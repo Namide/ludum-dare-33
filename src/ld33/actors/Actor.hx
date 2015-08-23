@@ -27,6 +27,13 @@ class Actor extends Object
 	//public var inputVel(default, default):Vector;
 	
 	static var ACTORS:Array<Actor> = [];
+	public static function killAll()
+	{
+		var i = ACTORS.length;
+		while ( --i > -1 ) {
+			ACTORS[i].kill();
+		}
+	}
 	
 	public var lastVel:Vector;
 	public var vel:Vector;

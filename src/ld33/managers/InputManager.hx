@@ -62,6 +62,8 @@ class InputManager extends Manager
 		{
 			player.onGround = false;			
 			player.vel.z = player.inputVel.z;
+			//hxd.Res.sound.jump.play(false, 1);
+			SoundManager.getInst().jump.play();
 		}
 		
 		var max = Math.abs(player.vel.x) + Math.abs(player.vel.y);

@@ -39,7 +39,15 @@ class Levels
 				
 			case 2 :
 				return getLevel2();
+				
+			case 3 :
+				return getLevel2();
+				
+			case 4 :
+				return getLevel2();
 		}
+		
+		Game.INST.dispose();
 		
 		return null;
 	}
@@ -135,6 +143,58 @@ class Levels
 	
 	static function getLevel2():Datas
 	{
+		var n = 4;
+		var path = function ( a:Enemy, t:Float ) {
+			
+			a.setZ( getZ(t, a) );
+			
+			if ( t < 0 )
+				t = 0;
+			
+			var y:Float = (a.id < 2) ? .5 : -.5;
+			var x:Float = (a.id % 2 == 0) ? .5 : -.5;
+			
+			x *= Game.GROUND_HALF_SIZE;
+			y *= Game.GROUND_HALF_SIZE;
+			
+			a.setPos( x, y, 0 );
+		}
+		
+		var shoot = function ( a:Enemy ) {
+			
+			var max = 32;
+			for ( i in 0...max )
+			{
+				var th = Math.PI * 2 * i / max;
+				
+				var bullet = new Bullet( a.size.z, BulletType.orange, function( bullet:Bullet, dt:Float ) {
+				
+					bullet.x += 0.02 * Math.cos(th);
+					bullet.y += 0.02 * Math.sin(th);
+					
+					Bullet.faceToCam( bullet.mesh, Game.INST.s3d.camera.pos );
+					bullet.onOutKill();
+				});
+				bullet.setPos( a.x, a.y, a.z );
+			}
+		}
+		
+		
+		return[ for (i in 0...n) function( id:Int, idMax:Int ) {
+					
+					var a = new Policeman(path);
+					//Type.createInstance(Clas, [level.path[i]] );
+					a.shoot = shoot;
+					a.id = id;
+					a.idMax = idMax;
+					a.delay = 5.;
+					a.lastShoot = - a.delay;
+					
+				} ];
+	}
+	
+	static function getLevel3():Datas
+	{
 		var path = function ( a:Enemy, t:Float ) { }
 		
 		var shoot = function ( a:Enemy ) {
@@ -179,7 +239,7 @@ class Levels
 				} ];
 	}
 	
-	static function getLevel3():Datas
+	static function getLevel4():Datas
 	{
 		var n = 20;
 		var rotationFct1 = function ( a:Enemy, t:Float ) {

@@ -7,6 +7,7 @@ import h3d.scene.Mesh;
 import h3d.Vector;
 import hxd.App;
 import hxd.Math;
+import ld33.actors.Actor;
 import ld33.actors.Player;
 import ld33.geom.FloorGeom;
 import ld33.managers.AIManager;
@@ -50,6 +51,8 @@ class CustomRenderer extends h3d.scene.Renderer {
 class Game extends App
 {
 
+	public var onFinish:Void->Void;
+	
 	static inline var SSAO:Bool = false;
 	
 	public static inline var GROUND_HALF_SIZE:Int = 6;
@@ -96,6 +99,17 @@ class Game extends App
 		initPlayer();
 		
 		wave.start(0);
+	}
+	
+	public function dispose()
+	{
+		Actor.killAll();
+		while ( s3d.numChildren > 0 ) {
+			s3d.removeChild( s3d.getChildAt(0) );
+		}
+		
+		if ( onFinish != null )
+			onFinish();
 	}
 	
 	function initManagers()
