@@ -3,6 +3,7 @@ package ld33.actors;
 import h3d.scene.Object;
 import h3d.Vector;
 import ld33.actors.Actor.ActorType;
+import motion.Actuate;
 
 /**
  * ...
@@ -34,5 +35,42 @@ class Player extends Actor
 		super.kill();
 		Game.INST.physic.remove( this );
 		Game.INST.anim.remove( this );
+	}
+	
+	public override function update( dt:Float )
+	{
+		var bounds = mesh.getBounds();
+		for ( actor in Actor.ACTORS )
+		{
+			if ( actor.type == ActorType.bullet )
+			{
+				var pos = actor.getPos();
+				if ( bounds.include( pos ) )
+				{
+					actor.kill();
+				}
+			}
+		}
+		
+		//trace( x, y, Game.GROUND_HALF_SIZE );
+	}
+	
+	public override function onGroundHit() {
+		
+		var bounds = mesh.getBounds();
+		for ( actor in Actor.ACTORS )
+		{
+			if ( actor.type == ActorType.enemy )
+			{
+				if ( bounds.collide(actor.mesh.getBounds() ) )
+				{
+					actor.onHurt( getPos() );
+					
+				}
+			}
+		}
+		
+		Game.INST.s3d.camera.target.z = -.3;
+		Actuate.tween( Game.INST.s3d.camera.target, 0.5, { z:0 } ).ease( motion.easing.Elastic.easeOut );
 	}
 }

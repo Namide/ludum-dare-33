@@ -22,34 +22,23 @@ class InputManager extends Manager
 	{
 		for ( actor in actors )
 		{
+			
+			
 			switch( actor.type )
 			{
 				case ActorType.player :
 					
 					player( cast actor );
 					
-				case ActorType.bullet :
+				case ActorType.bullet | ActorType.enemy :
 				
-					bullet( cast actor, dt );
-					
-				case ActorType.enemy :
-					
-					enemy( cast actor, dt );
-					
 				case ActorType.none :
 					
+					
 			}
+			
+			actor.update( dt );
 		}
-	}
-	
-	function bullet( bullet:Bullet, dt:Float )
-	{
-		bullet.update( dt );
-	}
-	
-	function enemy( enemy:Enemy, dt:Float )
-	{
-		enemy.update( dt );
 	}
 	
 	function player( player:Player)

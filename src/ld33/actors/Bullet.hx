@@ -16,6 +16,7 @@ import ld33.shader.BulletShader;
 
 enum BulletType {
 	orange;
+	blue;
 }
 
 /**
@@ -35,6 +36,7 @@ class Bullet extends Actor
 	{
 		super();
 		
+		this.size = new Vector( size, size, size );
 		type = ActorType.bullet;
 		
 		if ( sphere == null )
@@ -51,15 +53,19 @@ class Bullet extends Actor
 		if ( !mats.exists(bullet) )
 		{
 			var tex:Texture;
+			var mat = new MeshMaterial();
+			mat.blendMode = h2d.BlendMode.Alpha;
 			switch( bullet )
 			{
 				case BulletType.orange :
 					tex = hxd.Res.bullet_orange.toTexture();
+				case BulletType.blue :
+					tex = hxd.Res.bullet_blue.toTexture();
+					mat.blendMode = h2d.BlendMode.Add;
 			}
 			//tex.filter = Nearest;
+			mat.texture = tex;
 			
-			var mat = new MeshMaterial(tex);
-			mat.blendMode = h2d.BlendMode.Alpha;
 			//setMat( mat );
 			//Game.initMaterial( mat );
 			

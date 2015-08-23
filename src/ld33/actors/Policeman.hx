@@ -29,38 +29,6 @@ class Policeman extends Enemy
 		super.remove();
 	}
 	
-	override function shoot()
-	{
-		//var y = this.y;
-		var h = size.z;
-		var bullet1 = new Bullet( h, BulletType.orange, function( bullet:Bullet, dt:Float ) {
-			
-			//t += dt;
-			bullet.x -= dt;
-			Bullet.faceToCam( bullet.mesh, Game.INST.s3d.camera.pos );
-			//bullet.y = y + Math.sin( t );
-			
-		});
-		bullet1.setPos( this.x, this.y, this.z );
-		
-		var middle = 1.414213;
-		bullet1 = new Bullet( h, BulletType.orange, function( bullet:Bullet, dt:Float ){
-			bullet.x -= dt * middle; 
-			bullet.y -= dt * middle;
-			Bullet.faceToCam( bullet.mesh, Game.INST.s3d.camera.pos );
-			
-		});
-		bullet1.setPos( this.x, this.y, this.z );
-		
-		bullet1 = new Bullet( h, BulletType.orange, function( bullet:Bullet, dt:Float ){
-			bullet.x -= dt * middle; 
-			bullet.y += dt * middle;
-			Bullet.faceToCam( bullet.mesh, Game.INST.s3d.camera.pos );
-			
-		});
-		bullet1.setPos( this.x, this.y, this.z );
-		
-		
-	}
+	
 	
 }

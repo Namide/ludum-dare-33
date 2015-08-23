@@ -56,7 +56,7 @@ class Game extends App
 	public static var INST:Game;
 	
 	var time : Float = 0.;
-	var shadow : h3d.pass.ShadowMap;
+	//var shadow : h3d.pass.ShadowMap;
 	
 	var levelNum = 0;
 	
@@ -74,7 +74,7 @@ class Game extends App
 	
 	public static function initMaterial( m : h3d.mat.MeshMaterial ) {
 		m.mainPass.enableLights = true;
-		m.shadows = true;
+		//m.shadows = true;
 		
 		if (SSAO) {
 			m.addPass(new h3d.mat.Pass("depth", m.mainPass));
@@ -82,10 +82,10 @@ class Game extends App
 		}
 	}
 
-	public function start(level:Int)
+	/*public function start(level:Int)
 	{
-		wave = new WaveManager( this, level );
-	}
+		
+	}*/
 	
 	override function init() {
 		
@@ -95,7 +95,7 @@ class Game extends App
 		initManagers();
 		initPlayer();
 		
-		start(0);
+		wave.start(0);
 	}
 	
 	function initManagers()
@@ -105,6 +105,7 @@ class Game extends App
 		bullet = new BulletManager();
 		physic = new PhysicManager();
 		anim = new AnimationManager();
+		wave = new WaveManager();
 	}
 	
 	function initPlayer() {
@@ -117,24 +118,52 @@ class Game extends App
 	function init3D() {
 
 		//	FLOOR
-		var floor = new FloorGeom(	GROUND_HALF_SIZE + GROUND_HALF_SIZE,
-									GROUND_HALF_SIZE + GROUND_HALF_SIZE,
-									0.1);//new h3d.prim.Grid(w, w, 10, 10);
+		var floor = new FloorGeom(	2*GROUND_HALF_SIZE,
+									2*GROUND_HALF_SIZE,
+									2*GROUND_HALF_SIZE );
 		floor.addNormals();
-		floor.translate(-GROUND_HALF_SIZE, -GROUND_HALF_SIZE, -.1);
-		floor.addRepUVs( 1/groundMod );
-		var tex = hxd.Res.grass.toTexture();
-		tex.wrap = Wrap.Repeat;
+		floor.translate(-GROUND_HALF_SIZE, -GROUND_HALF_SIZE, -2*GROUND_HALF_SIZE);
+		//floor.addRepUVs( 1/groundMod );
+		floor.addRepUVs( 1 );
+		var tex = hxd.Res.floor.toTexture();
+		//tex.wrap = Wrap.Repeat;
 		tex.filter = Nearest;
-		//tex.mipMap = MipMap.Linear;
-		//trace(tex.width);
-		
 		var mat = new MeshMaterial(tex);
-		
+		/*var mat = new MeshMaterial();
+		mat.color.set( 1, 1, 1);*/
 		ground = new h3d.scene.Mesh(floor, mat, s3d);
 		initMaterial(ground.material);
 		ground.material.color.makeColor(1.0, 1.0, 1.0);
 
+		
+		//	WALL
+		var tex2 = hxd.Res.wall.toTexture();
+		tex.filter = Nearest;
+		var mat2 = new MeshMaterial(tex2);
+		var wall = new h3d.scene.Mesh(floor, mat2, s3d);
+		initMaterial(wall.material);
+		ground.material.color.makeColor(1.0, 1.0, 1.0);
+		wall.y = -2*GROUND_HALF_SIZE;
+		wall.z = 2 * GROUND_HALF_SIZE;
+		
+		wall = new h3d.scene.Mesh(floor, mat2, s3d);
+		initMaterial(wall.material);
+		ground.material.color.makeColor(1.0, 1.0, 1.0);
+		wall.x = -2*GROUND_HALF_SIZE;
+		wall.z = 2 * GROUND_HALF_SIZE;
+		
+		wall = new h3d.scene.Mesh(floor, mat2, s3d);
+		initMaterial(wall.material);
+		ground.material.color.makeColor(1.0, 1.0, 1.0);
+		wall.x = 2*GROUND_HALF_SIZE;
+		wall.z = 2 * GROUND_HALF_SIZE;
+		
+		wall = new h3d.scene.Mesh(floor, mat2, s3d);
+		initMaterial(wall.material);
+		ground.material.color.makeColor(1.0, 1.0, 1.0);
+		wall.y = 2*GROUND_HALF_SIZE;
+		
+		
 		/*for( i in 0...100 ) {
 			var box : h3d.prim.Polygon = new h3d.prim.Cube(Math.random(),Math.random(), 0.7 + Math.random() * 0.8);
 			box.unindex();
@@ -154,16 +183,16 @@ class Game extends App
 		
 		// CAMERA
 		//trace("camera:", s3d.camera.pos, s3d.camera.target);
-		
+		s3d.camera.pos.set( 0, 20., 8. );
+		s3d.camera.target.set( 0, 0, 0. );
 		
 		// LIGHTS
 		s3d.lightSystem.ambientLight.set(0.5, 0.5, 0.5);
 		var dir = new h3d.scene.DirLight(new h3d.Vector( -0.3, -0.2, -1), s3d);
 		dir.color.set(0.5, 0.5, 0.5);
-		shadow = cast(s3d.renderer.getPass("shadow"), h3d.pass.ShadowMap);
-		shadow.lightDirection = dir.direction;
-		shadow.blur.passes = 3;
-		//shadow.bias = 0.02;
+		//shadow = cast(s3d.renderer.getPass("shadow"), h3d.pass.ShadowMap);
+		//shadow.lightDirection = dir.direction;
+		//shadow.blur.passes = 3;
 		
 		// SSAO
 		if (SSAO) {
@@ -185,12 +214,8 @@ class Game extends App
 		if ( wave != null )
 			wave.update(dt);
 		
-		s3d.camera.pos.set( player.x + 4, player.y + 20., 8. );
-		s3d.camera.target.set( player.x + 4, player.y, 0. );
-		
-		/*ground.setPos( 	(player.x + 4) - ( (player.x + 4) % ( groundSize * groundMod ) ),
-						player.y - ( player.y % ( groundSize * groundMod ) ),
-						.0 );*/
+		/*s3d.camera.pos.set( player.x + 4, player.y + 20., 8. );
+		s3d.camera.target.set( player.x + 4, player.y, 0. );*/
 		
 	}
 

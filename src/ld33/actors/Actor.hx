@@ -1,5 +1,6 @@
 package ld33.actors;
 
+import h3d.col.Point;
 import h3d.mat.MeshMaterial;
 import h3d.mat.Texture;
 import h3d.scene.Mesh;
@@ -8,6 +9,7 @@ import h3d.Vector;
 import ld33.factory.CubeFactory;
 import ld33.factory.MaterialFactory;
 import ld33.geom.PlaneGeom;
+import ld33.shader.OpacityShader;
 
 enum ActorType {
 	player;
@@ -23,10 +25,14 @@ enum ActorType {
 class Actor extends Object
 {
 	//public var inputVel(default, default):Vector;
+	
+	static var ACTORS:Array<Actor> = [];
+	
 	public var lastVel:Vector;
 	public var vel:Vector;
-
+	
 	public var onGround = true;
+	public var onDie = false;
 	
 	public var size:Vector;
 	public var life:Float;
@@ -35,14 +41,21 @@ class Actor extends Object
 	public var shadow:Mesh;
 	public var shadowMesh:PlaneGeom;
 	public var shadowMat:MeshMaterial;
+	public var shadowShader:OpacityShader;
 	public var mesh:Object;
+	
+	var point:Point;
 	
 	public function new() 
 	{
 		super();
+		
+		ACTORS.push(this);
+		
 		type = ActorType.none;
 		vel = new Vector();
 		lastVel = new Vector();
+		point = new Point();
 		
 		Game.INST.input.add( this );
 		Game.INST.s3d.addChild( this );
@@ -66,6 +79,11 @@ class Actor extends Object
 			
 			shadowMat = new MeshMaterial(tex);
 			shadowMat.blendMode = h2d.BlendMode.Multiply;
+			
+			var fog = new OpacityShader();
+			fog.transparence = .5;
+			shadowMat.mainPass.addShader( fog );
+			
 			//setMat( mat );
 			//Game.initMaterial( mat );
 			
@@ -74,16 +92,37 @@ class Actor extends Object
 		
 		
 		shadow = new Mesh( shadowMesh, shadowMat, this );
+		
+		shadowShader = shadow.material.mainPass.getShader(OpacityShader);
+		
+		
 		shadow.rotate( Math.PI * .5, .0, .0 );
 		shadow.z = .001;
 	}
 	
+	public function getPos()
+	{
+		point.x = x;
+		point.y = y;
+		point.z = mesh.z;
+		return point;
+	}
+	
+	public function onGroundHit() { }
+	public function onHurt( pt:Point ) { }
 	public function update( dt:Float ) { }
+	
+	public inline function setZ( z:Float )
+	{
+		shadowShader.transparence = .5 + (z - size.z * .5) * 0.1;
+		mesh.z = z;
+	}
 	
 	public function kill()
 	{
 		Game.INST.input.remove( this );
 		Game.INST.s3d.removeChild( this );
+		ACTORS.remove(this);
 	}
 	
 	function addCubes( size:Vector, cubes:Array<Vector> /* bottom to top: r, g, b, perc */ )
@@ -92,8 +131,11 @@ class Actor extends Object
 		this.size = size;
 		var halfHeight = size.z * 0.5;
 		
+		shadow.scale( (size.x + size.y) * 0.75 );
+		
 		mesh = new Object(this);
-		mesh.setPos( 0, 0, halfHeight );
+		//mesh.setPos( 0, 0, halfHeight );
+		setZ( halfHeight );
 		
 		
 		var cubePos = new Vector();
@@ -143,4 +185,14 @@ class Actor extends Object
 		//addChild( p );
 	}
 	
+	public inline function onOutKill()
+	{
+		if ( 	x < -Game.GROUND_HALF_SIZE ||
+				x > Game.GROUND_HALF_SIZE ||
+				y < -Game.GROUND_HALF_SIZE ||
+				y > Game.GROUND_HALF_SIZE )
+		{
+			kill();
+		}
+	}
 }
