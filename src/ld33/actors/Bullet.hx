@@ -17,6 +17,7 @@ import ld33.shader.BulletShader;
 enum BulletType {
 	orange;
 	blue;
+	red;
 }
 
 /**
@@ -59,6 +60,8 @@ class Bullet extends Actor
 			{
 				case BulletType.orange :
 					tex = hxd.Res.bullet_orange.toTexture();
+				case BulletType.red :
+					tex = hxd.Res.bullet_red.toTexture();
 				case BulletType.blue :
 					tex = hxd.Res.bullet_blue.toTexture();
 					mat.blendMode = h2d.BlendMode.Add;

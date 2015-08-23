@@ -15,12 +15,13 @@ class Player extends Actor
 {
 	
 	public var inputVel = new Vector(10., 10., 17.);
-
+	
 	public function new() 
 	{
 		super();
 		
 		type = ActorType.player;
+		life = 3;
 		
 		var cubes = [	new Vector( 0.23, 0.1, 0., 0.5 ),
 						new Vector( 0.8, 0.6, 0.1, 0.4 ),
@@ -47,9 +48,12 @@ class Player extends Actor
 			if ( actor.type == ActorType.bullet )
 			{
 				var pos = actor.getPos();
-				if ( bounds.include( pos ) )
-				{
+				if ( bounds.include( pos ) ) {
 					actor.kill();
+					SoundManager.getInst().play( Sounds.lose );
+					
+					if ( !Game.NO_END )
+						Game.INST.dispose();
 				}
 			}
 		}
@@ -67,11 +71,12 @@ class Player extends Actor
 				if ( bounds.collide(actor.mesh.getBounds() ) )
 				{
 					actor.onHurt( getPos() );
+					SoundManager.getInst().play( Sounds.shot );
 				}
 			}
 		}
 		
-		SoundManager.getInst().impact.play();
+		SoundManager.getInst().play( Sounds.impact );
 		
 		Game.INST.s3d.camera.target.z = -.3;
 		Actuate.tween( Game.INST.s3d.camera.target, 0.5, { z:0 } ).ease( motion.easing.Elastic.easeOut );

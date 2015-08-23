@@ -35,16 +35,16 @@ class Levels
 				return getLevel0();
 				
 			case 1 :
-				return getLevel1();
+				return getLevel1();	// 4 persos + circles
 				
 			case 2 :
 				return getLevel2();
 				
 			case 3 :
-				return getLevel2();
+				return getLevel3();
 				
 			case 4 :
-				return getLevel2();
+				return getLevel4();
 		}
 		
 		Game.INST.dispose();
@@ -193,7 +193,7 @@ class Levels
 				} ];
 	}
 	
-	static function getLevel3():Datas
+	static function getLevel4():Datas
 	{
 		var path = function ( a:Enemy, t:Float ) { }
 		
@@ -239,7 +239,7 @@ class Levels
 				} ];
 	}
 	
-	static function getLevel4():Datas
+	static function getLevel3():Datas
 	{
 		var n = 20;
 		var rotationFct1 = function ( a:Enemy, t:Float ) {

@@ -5,6 +5,7 @@ import ld33.actors.Actor;
 import ld33.actors.Bullet;
 import ld33.actors.Enemy;
 import ld33.actors.Player;
+import ld33.managers.SoundManager.Sounds;
 
 /**
  * ...
@@ -63,7 +64,7 @@ class InputManager extends Manager
 			player.onGround = false;			
 			player.vel.z = player.inputVel.z;
 			//hxd.Res.sound.jump.play(false, 1);
-			SoundManager.getInst().jump.play();
+			SoundManager.getInst().play( Sounds.jump );
 		}
 		
 		var max = Math.abs(player.vel.x) + Math.abs(player.vel.y);

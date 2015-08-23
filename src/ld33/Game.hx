@@ -51,14 +51,16 @@ class CustomRenderer extends h3d.scene.Renderer {
 class Game extends App
 {
 
-	public var onFinish:Void->Void;
+	static public inline var NO_END:Bool = true;
+	
+	//public var onFinish:?h3d.Engine->Void;
 	
 	static inline var SSAO:Bool = false;
 	
 	public static inline var GROUND_HALF_SIZE:Int = 6;
 	public static var INST:Game;
 	
-	var time : Float = 0.;
+	//var time : Float = 0.;
 	//var shadow : h3d.pass.ShadowMap;
 	
 	var levelNum = 0;
@@ -69,6 +71,8 @@ class Game extends App
 	public var physic:PhysicManager;
 	public var anim:AnimationManager;
 	public var wave:WaveManager;
+	
+	public var inGame = false;
 	
 	var player:Player;
 	var ground:Mesh;
@@ -90,26 +94,73 @@ class Game extends App
 		
 	}*/
 	
-	override function init() {
+	
+	var spr : h2d.Sprite;
+	var bmp : h2d.Bitmap;
+	public function screen()
+	{
+		spr = new h2d.Sprite(s2d);
+		spr.x = Std.int(s2d.width / 2);
+		spr.y = Std.int(s2d.height / 2);
+
+		var tile = hxd.Res.screen_title.toTile();
+		tile = tile.center();
+		var tex:h3d.mat.Texture = tile.getTexture();
+		//trace( tex.filter ); // = Linear;
+		//trace( tex.mipMap );// = MipMap.Linear;
+		bmp = new h2d.Bitmap(tile, spr);
+		
+		
+		onResize();
+		inGame = false;
+	}
+	override function onResize() {
+
+		spr.x = Std.int(s2d.width / 2);
+		spr.y = Std.int(s2d.height / 2);
+		
+		var r1 = bmp.tile.width / bmp.tile.height;
+		var r2 = s2d.width / s2d.height;
+		
+		var s = (r1 > r2) ? ( s2d.width / bmp.tile.width) : (s2d.height / bmp.tile.height);
+		bmp.tile = bmp.tile.center();
+		bmp.setScale( s );
+	}
+	
+	
+	
+	
+	
+	public function start()
+	{
+		initPlayer();
+		wave.start(0);
+		inGame = true;
+	}
+	
+	
+	
+	public override function init() {
 		
 		Game.INST = this;
 		
 		init3D();
 		initManagers();
-		initPlayer();
+		//initPlayer();
 		
-		wave.start(0);
+		screen();
 	}
-	
+		
 	public function dispose()
 	{
 		Actor.killAll();
-		while ( s3d.numChildren > 0 ) {
+		/*while ( s3d.numChildren > 0 ) {
 			s3d.removeChild( s3d.getChildAt(0) );
-		}
+		}*/
 		
-		if ( onFinish != null )
-			onFinish();
+		/*if ( onFinish != null )
+			onFinish();*/
+		screen();
 	}
 	
 	function initManagers()
@@ -216,23 +267,33 @@ class Game extends App
 
 	override function update( dt : Float ) {
 		
-		dt *= 0.01;
-		time += dt;
-		
-		input.update(dt);
-		ai.update(dt);
-		bullet.update(dt);
-		physic.update(dt);
-		anim.update(dt);
-		
-		if ( wave != null )
-			wave.update(dt);
-		
-		/*s3d.camera.pos.set( player.x + 4, player.y + 20., 8. );
-		s3d.camera.target.set( player.x + 4, player.y, 0. );*/
+		if ( !inGame ) {
+			
+			if ( hxd.Key.isDown( hxd.Key.ENTER ) )
+			{
+				bmp.remove();
+				spr.remove();
+				bmp = null;
+				spr = null;
+				start();
+			}
+			
+		}
+		else
+		{
+			dt *= 0.01;
+			//time += dt;
+			
+			input.update(dt);
+			ai.update(dt);
+			bullet.update(dt);
+			physic.update(dt);
+			anim.update(dt);
+			
+			if ( wave != null )
+				wave.update(dt);
+		}
 		
 	}
-
-	
 	
 }
