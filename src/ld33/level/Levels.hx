@@ -32,16 +32,16 @@ class Levels
 		switch( num )
 		{
 			case 0 :
-				return getLevel4();
+				return getLevel0();
 				
-			/*case 1 :
+			case 1 :
 				return getLevel1();	// 4 persos + circles
 				
 			case 2 :
 				return getLevel3();
 				
 			case 3 :
-				return getLevel4();*/
+				return getLevel4();
 		}
 		
 		
