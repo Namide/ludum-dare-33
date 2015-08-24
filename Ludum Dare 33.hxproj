@@ -24,7 +24,7 @@
     <option noInlineOnDebug="False" />
     <option mainClass="ld33.Main" />
     <option enabledebug="True" />
-    <option additional="-lib heaps&#xA;-lib actuate&#xA;-D resourcesPath=res&#xA;" />
+    <option additional="-lib heaps&#xA;-lib actuate&#xA;-D resourcesPath=res&#xA;--no-traces" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

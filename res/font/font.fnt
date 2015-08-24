@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Font size="14" family="HNLS" height="30" style="87">
+ <Char width="8" offset="2 0" rect="1 1 5 18" code="!"/>
+ <Char width="6" offset="1 13" rect="7 14 5 5" code="."/>
+ <Char width="12" offset="0 0" rect="13 1 13 19" code="0"/>
+ <Char width="12" offset="1 0" rect="27 1 9 18" code="1"/>
+ <Char width="12" offset="0 0" rect="37 1 13 18" code="2"/>
+ <Char width="12" offset="0 0" rect="51 1 13 19" code="3"/>
+ <Char width="12" offset="0 0" rect="65 1 13 18" code="4"/>
+ <Char width="12" offset="0 0" rect="79 1 13 19" code="5"/>
+ <Char width="12" offset="0 0" rect="93 1 13 19" code="6"/>
+ <Char width="12" offset="0 0" rect="107 1 13 18" code="7"/>
+ <Char width="12" offset="0 0" rect="1 21 13 19" code="8"/>
+ <Char width="12" offset="0 0" rect="15 21 13 19" code="9"/>
+ <Char width="6" offset="1 4" rect="29 25 5 14" code=":"/>
+ <Char width="11" offset="0 4" rect="35 25 12 15" code="c"/>
+ <Char width="11" offset="0 4" rect="48 25 12 15" code="e"/>
+ <Char width="6" offset="1 0" rect="61 21 5 18" code="i"/>
+ <Char width="19" offset="1 4" rect="67 25 18 14" code="m"/>
+ <Char width="11" offset="0 4" rect="86 25 11 15" code="s"/>
+ <Char width="7" offset="-1 0" rect="98 21 9 19" code="t"/>
+</Font>

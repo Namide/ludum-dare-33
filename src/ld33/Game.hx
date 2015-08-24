@@ -12,9 +12,10 @@ import ld33.actors.Player;
 import ld33.geom.FloorGeom;
 import ld33.managers.AIManager;
 import ld33.managers.AnimationManager;
-import ld33.managers.BulletManager;
+//import ld33.managers.BulletManager;
 import ld33.managers.InputManager;
 import ld33.managers.PhysicManager;
+import ld33.managers.SoundManager;
 import ld33.managers.WaveManager;
 
 class CustomRenderer extends h3d.scene.Renderer {
@@ -51,7 +52,9 @@ class CustomRenderer extends h3d.scene.Renderer {
 class Game extends App
 {
 
-	static public inline var NO_END:Bool = true;
+	static public inline var NO_END:Bool = false;
+	
+	public var time:Float;
 	
 	//public var onFinish:?h3d.Engine->Void;
 	
@@ -67,7 +70,7 @@ class Game extends App
 	
 	public var input:InputManager;
 	public var ai:AIManager;
-	public var bullet:BulletManager;
+	//public var bullet:BulletManager;
 	public var physic:PhysicManager;
 	public var anim:AnimationManager;
 	public var wave:WaveManager;
@@ -97,7 +100,8 @@ class Game extends App
 	
 	var spr : h2d.Sprite;
 	var bmp : h2d.Bitmap;
-	public function screen()
+	var tf : h2d.Text;
+	public function screen(?score:Float = -1)
 	{
 		spr = new h2d.Sprite(s2d);
 		spr.x = Std.int(s2d.width / 2);
@@ -111,11 +115,34 @@ class Game extends App
 		bmp = new h2d.Bitmap(tile, spr);
 		
 		
+		
+		if (score>-1)
+		{
+			var font = hxd.Res.font.font.toFont();
+			tf = new h2d.Text(font, s2d);
+			tf.textColor = 0xFFFFFF;
+			tf.dropShadow = { dx : 0.5, dy : 0.5, color : 0x000000, alpha : 0.8 };
+			
+			var sc:Float = score - Math.floor(score);
+			tf.text = "time: " + Math.floor(score)+"."+Math.floor((score-Math.floor(score)) * 100)+" sec";
+
+			tf.y = -tf.textHeight * .5 + 150;
+			tf.x = -tf.textWidth * .5 - 30;
+			//tf.scale(7);
+		}
+		
+		
+		
+		
+		
 		onResize();
 		inGame = false;
 	}
 	override function onResize() {
 
+		if ( spr == null || bmp == null )
+			return;
+		
 		spr.x = Std.int(s2d.width / 2);
 		spr.y = Std.int(s2d.height / 2);
 		
@@ -125,6 +152,14 @@ class Game extends App
 		var s = (r1 > r2) ? ( s2d.width / bmp.tile.width) : (s2d.height / bmp.tile.height);
 		bmp.tile = bmp.tile.center();
 		bmp.setScale( s );
+		
+		if (tf != null)
+		{
+			//tf.setScale( s );
+			tf.y = 10; //s2d.height - tf.textHeight;
+			tf.x = s2d.width -tf.textWidth - 20;
+		}
+		
 	}
 	
 	
@@ -136,6 +171,7 @@ class Game extends App
 		initPlayer();
 		wave.start(0);
 		inGame = true;
+		time = 0;
 	}
 	
 	
@@ -151,7 +187,7 @@ class Game extends App
 		screen();
 	}
 		
-	public function dispose()
+	public function dispose(time:Float)
 	{
 		Actor.killAll();
 		/*while ( s3d.numChildren > 0 ) {
@@ -160,14 +196,14 @@ class Game extends App
 		
 		/*if ( onFinish != null )
 			onFinish();*/
-		screen();
+		screen(time);
 	}
 	
 	function initManagers()
 	{
 		input = new InputManager();
 		ai = new AIManager();
-		bullet = new BulletManager();
+		//bullet = new BulletManager();
 		physic = new PhysicManager();
 		anim = new AnimationManager();
 		wave = new WaveManager();
@@ -267,26 +303,42 @@ class Game extends App
 
 	override function update( dt : Float ) {
 		
+		if ( hxd.Key.isReleased( 77 ) ) {
+			SoundManager.getInst().changeMusic();
+		}
+		
+		if ( hxd.Key.isReleased( 83 ) ) {
+			SoundManager.getInst().changeSound();
+		}
+		
+		
 		if ( !inGame ) {
 			
-			if ( hxd.Key.isDown( hxd.Key.ENTER ) )
+			if ( hxd.Key.isReleased( hxd.Key.ENTER ) )
 			{
 				bmp.remove();
 				spr.remove();
 				bmp = null;
 				spr = null;
+				
+				if (tf != null)
+					tf.remove();
+				
 				start();
+				
+				
 			}
 			
 		}
 		else
 		{
 			dt *= 0.01;
-			//time += dt;
+			time += dt;
+			//trace(time);
 			
 			input.update(dt);
 			ai.update(dt);
-			bullet.update(dt);
+			//bullet.update(dt);
 			physic.update(dt);
 			anim.update(dt);
 			

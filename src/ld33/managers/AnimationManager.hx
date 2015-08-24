@@ -9,8 +9,6 @@ import hxd.Math;
  */
 class AnimationManager extends Manager
 {
-	var t = 0.;
-	
 	public function new() 
 	{
 		super();
@@ -19,8 +17,6 @@ class AnimationManager extends Manager
 	
 	public override function update( dt:Float )
 	{
-		t += dt;
-		
 		var v = new Vector();
 		for ( actor in actors )
 		{

@@ -58,23 +58,9 @@ class WaveManager extends Manager
 	
 	public override function update( dt:Float )
 	{
-		if ( actors.length < 1)
-		{
+		if ( actors.length < 1)	{
 			start( id + 1 );
 		}
-		/*t += dt;
-		t %= level.time;
-		
-		var l = actors.length;
-		for ( i in 0...l ) {
-			var actor = actors[i];
-			level.fct[i]( t % level.time, cast actor, i, l>>1 );
-		}*/
 	}
-	
-	/*static inline function lerp( a:Float, b:Float, v:Float )
-	{
-		return (b - a) * v + a;
-	}*/
 	
 }

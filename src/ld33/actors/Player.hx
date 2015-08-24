@@ -53,7 +53,7 @@ class Player extends Actor
 					SoundManager.getInst().play( Sounds.lose );
 					
 					if ( !Game.NO_END )
-						Game.INST.dispose();
+						Game.INST.dispose(-1);
 				}
 			}
 		}
@@ -63,6 +63,8 @@ class Player extends Actor
 	
 	public override function onGroundHit() {
 		
+		var hurt:Bool = false;
+		
 		var bounds = mesh.getBounds();
 		for ( actor in Actor.ACTORS )
 		{
@@ -71,12 +73,16 @@ class Player extends Actor
 				if ( bounds.collide(actor.mesh.getBounds() ) )
 				{
 					actor.onHurt( getPos() );
-					SoundManager.getInst().play( Sounds.shot );
+					hurt = true;
+					
 				}
 			}
 		}
 		
-		SoundManager.getInst().play( Sounds.impact );
+		if ( hurt )
+			SoundManager.getInst().play( Sounds.shot );
+		else
+			SoundManager.getInst().play( Sounds.impact );
 		
 		Game.INST.s3d.camera.target.z = -.3;
 		Actuate.tween( Game.INST.s3d.camera.target, 0.5, { z:0 } ).ease( motion.easing.Elastic.easeOut );

@@ -12,7 +12,8 @@ import ld33.managers.WaveManager.Datas;
  */
 class Levels
 {
-
+	
+	
 	inline static function getZ( t:Float, a:Enemy )
 	{
 		var z:Float;
@@ -26,28 +27,25 @@ class Levels
 		return z;
 	}
 	
-	
 	public static function getLevel(num:Int):Datas
 	{
 		switch( num )
 		{
 			case 0 :
-				return getLevel0();
+				return getLevel4();
 				
-			case 1 :
+			/*case 1 :
 				return getLevel1();	// 4 persos + circles
 				
 			case 2 :
-				return getLevel2();
-				
-			case 3 :
 				return getLevel3();
 				
-			case 4 :
-				return getLevel4();
+			case 3 :
+				return getLevel4();*/
 		}
 		
-		Game.INST.dispose();
+		
+		Game.INST.dispose( Game.INST.time );
 		
 		return null;
 	}
@@ -141,23 +139,19 @@ class Levels
 				} ];
 	}
 	
-	static function getLevel2():Datas
+	static function getLevel4():Datas
 	{
-		var n = 4;
-		var path = function ( a:Enemy, t:Float ) {
+		var path = function ( a:Enemy, t:Float ) { 
 			
-			a.setZ( getZ(t, a) );
+			var x:Float, y:Float;
 			
-			if ( t < 0 )
-				t = 0;
-			
-			var y:Float = (a.id < 2) ? .5 : -.5;
-			var x:Float = (a.id % 2 == 0) ? .5 : -.5;
-			
-			x *= Game.GROUND_HALF_SIZE;
-			y *= Game.GROUND_HALF_SIZE;
+			var th = Math.PI * ( t * 0.1 + ((a.id == 0) ? 1. : 0. ) );
+			var x = Game.GROUND_HALF_SIZE * .4 * Math.cos( th );
+			var y = Game.GROUND_HALF_SIZE * .4 * Math.sin( th );
 			
 			a.setPos( x, y, 0 );
+			a.setZ( getZ(t, a) );
+			
 		}
 		
 		var shoot = function ( a:Enemy ) {
@@ -166,46 +160,9 @@ class Levels
 			for ( i in 0...max )
 			{
 				var th = Math.PI * 2 * i / max;
-				
-				var bullet = new Bullet( a.size.z, BulletType.orange, function( bullet:Bullet, dt:Float ) {
-				
-					bullet.x += 0.02 * Math.cos(th);
-					bullet.y += 0.02 * Math.sin(th);
-					
-					Bullet.faceToCam( bullet.mesh, Game.INST.s3d.camera.pos );
-					bullet.onOutKill();
-				});
-				bullet.setPos( a.x, a.y, a.z );
-			}
-		}
-		
-		
-		return[ for (i in 0...n) function( id:Int, idMax:Int ) {
-					
-					var a = new Policeman(path);
-					//Type.createInstance(Clas, [level.path[i]] );
-					a.shoot = shoot;
-					a.id = id;
-					a.idMax = idMax;
-					a.delay = 5.;
-					a.lastShoot = - a.delay;
-					
-				} ];
-	}
-	
-	static function getLevel4():Datas
-	{
-		var path = function ( a:Enemy, t:Float ) { }
-		
-		var shoot = function ( a:Enemy ) {
-			
-			var max = 64;
-			for ( i in 0...max )
-			{
-				var th = Math.PI * 2 * i / max;
 				th += a.t;
 				
-				var bullet = new Bullet( a.size.z, BulletType.blue, function( bullet:Bullet, dt:Float ) {
+				var bullet = new Bullet( a.size.z, BulletType.orange, function( bullet:Bullet, dt:Float ) {
 				
 					//var th2 = th + bullet.t;
 					
@@ -224,19 +181,20 @@ class Levels
 			}
 		}
 		
+		var spawn = function( id:Int, idMax:Int ) {
+			
+			var a = new Tank(path);
+			a.shoot = shoot;
+			a.id = id;
+			a.idMax = idMax;
+			a.delay = 4.;
+			a.lastShoot = - a.delay;
+			a.x = 0.7 * Game.GROUND_HALF_SIZE;
+			a.y = 0.;
+			
+		};
 		
-		return [ function( id:Int, idMax:Int ) {
-					
-					var a = new Tank(path);
-					a.shoot = shoot;
-					a.id = id;
-					a.idMax = idMax;
-					a.delay = 4.;
-					a.lastShoot = - a.delay;
-					a.x = 0.7 * Game.GROUND_HALF_SIZE;
-					a.y = 0.;
-					
-				} ];
+		return [ spawn, spawn ];
 	}
 	
 	static function getLevel3():Datas
@@ -250,7 +208,7 @@ class Levels
 			var x:Float, y:Float;
 			
 			var th = Math.PI * ( t * 0.5 + 2 * i / max );
-			var x = Game.GROUND_HALF_SIZE * .5 + Game.GROUND_HALF_SIZE * .4 * Math.cos( th );
+			var x = /*Game.GROUND_HALF_SIZE * .5 +*/ Game.GROUND_HALF_SIZE * .4 * Math.cos( th );
 			var y = Game.GROUND_HALF_SIZE * .4 * Math.sin( th );
 			
 			a.setPos( x, y, 0 );
@@ -265,7 +223,7 @@ class Levels
 			var x:Float, y:Float;
 			
 			var th = Math.PI * ( -t * 0.5 + 2 * i / max );
-			var x = Game.GROUND_HALF_SIZE * .5 + Game.GROUND_HALF_SIZE * .2 * Math.cos( th );
+			var x = /*Game.GROUND_HALF_SIZE * .5 +*/ Game.GROUND_HALF_SIZE * .2 * Math.cos( th );
 			var y = Game.GROUND_HALF_SIZE * .2 * Math.sin( th );
 			
 			a.setPos( x, y, 0 );
@@ -274,17 +232,19 @@ class Levels
 		
 		var shoot = function (a:Enemy)
 		{
+			var middle = 1.414213;
 			var h = a.size.z;
-			var bullet1 = new Bullet( h, BulletType.orange, function( bullet:Bullet, dt:Float ) {
+			
+			var bullet1 = new Bullet( h, BulletType.blue, function( bullet:Bullet, dt:Float ) {
 				
-				bullet.x -= dt;
+				bullet.x += dt * middle;
+				bullet.y += dt * middle;
 				Bullet.faceToCam( bullet.mesh, Game.INST.s3d.camera.pos );
 				bullet.onOutKill();
 			});
 			bullet1.setPos( a.x, a.y, a.z );
 			
-			var middle = 1.414213;
-			bullet1 = new Bullet( h, BulletType.orange, function( bullet:Bullet, dt:Float ){
+			bullet1 = new Bullet( h, BulletType.red, function( bullet:Bullet, dt:Float ){
 				
 				bullet.x -= dt * middle; 
 				bullet.y -= dt * middle;
@@ -293,10 +253,19 @@ class Levels
 			});
 			bullet1.setPos( a.x, a.y, a.z );
 			
-			bullet1 = new Bullet( h, BulletType.orange, function( bullet:Bullet, dt:Float ){
+			bullet1 = new Bullet( h, BulletType.blue, function( bullet:Bullet, dt:Float ){
 				
 				bullet.x -= dt * middle; 
 				bullet.y += dt * middle;
+				Bullet.faceToCam( bullet.mesh, Game.INST.s3d.camera.pos );
+				bullet.onOutKill();
+			});
+			bullet1.setPos( a.x, a.y, a.z );
+			
+			bullet1 = new Bullet( h, BulletType.red, function( bullet:Bullet, dt:Float ){
+				
+				bullet.x += dt * middle; 
+				bullet.y -= dt * middle;
 				Bullet.faceToCam( bullet.mesh, Game.INST.s3d.camera.pos );
 				bullet.onOutKill();
 			});
