@@ -27,6 +27,7 @@ class WaveManager extends Manager
 	//var level:Datas;
 	//var t:Float;
 	var id:Int;
+	public var play:Bool = false;
 	
 	public function new() 
 	{
@@ -52,12 +53,15 @@ class WaveManager extends Manager
 			id = levelId;
 		}
 		
-		
+		play = true;
 	}
 	
 	
 	public override function update( dt:Float )
 	{
+		if (!play)
+			return;
+		
 		if ( actors.length < 1)	{
 			start( id + 1 );
 		}

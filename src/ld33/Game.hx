@@ -190,6 +190,15 @@ class Game extends App
 	public function dispose(time:Float)
 	{
 		Actor.killAll();
+		
+		input.dispose();
+		ai.dispose();
+		physic.dispose();
+		anim.dispose();
+		wave.dispose();
+		wave.play = false;
+		
+		
 		/*while ( s3d.numChildren > 0 ) {
 			s3d.removeChild( s3d.getChildAt(0) );
 		}*/

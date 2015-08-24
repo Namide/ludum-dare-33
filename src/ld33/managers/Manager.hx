@@ -30,4 +30,10 @@ class Manager
 		
 	}
 	
+	public inline function dispose()
+	{
+		actors = [];
+	}
+	
+	
 }
